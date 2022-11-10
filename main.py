@@ -1,5 +1,6 @@
+
 import re
-from hw_10 import *
+from core import *
 
 CONTACTS = AddressBook()
 
@@ -172,3 +173,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
