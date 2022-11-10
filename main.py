@@ -1,6 +1,6 @@
-
 import re
 from core import *
+from sort import *
 
 CONTACTS = AddressBook()
 
@@ -102,7 +102,7 @@ def iteration():
     for i in CONTACTS.iterator():
         print(i)
 
-# Пошук за не повними значеннями контактів та команд
+# Пошук за не повними значеннями команд
 
 
 def find_com(var):
@@ -114,6 +114,8 @@ def find_com(var):
         raise Exception
     print(
         f"You are looking for '{var}', the most suitable command is: {command_list}")
+
+# Пошук за не повними значеннями контактів
 
 
 def find(var):
@@ -132,13 +134,20 @@ def find(var):
         f"You are looking for '{var}', the most suitable contact is: {show_list}")
 
 
+# Сортування папки з файлами
+def clean_folder():
+    get_main_path()
+    print('Done!')
+
+
 COMMANDS = {
     "hello": hello_handler,
     "show all": show_contacts_handler,
     "exit": quit_handler,
     "close": quit_handler,
     "good bye": quit_handler,
-    "iter": iteration
+    "iter": iteration,
+    "sort": clean_folder
 }
 
 
@@ -173,4 +182,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
