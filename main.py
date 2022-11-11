@@ -2,6 +2,7 @@ import re
 from core import *
 from sort import *
 
+
 CONTACTS = AddressBook()
 
 
@@ -104,6 +105,7 @@ def iteration():
 
 
 # Пошук за не повними значеннями команд
+@input_error
 def find_com(var):
     command_list = []
     for command in COMMANDS:
@@ -116,6 +118,7 @@ def find_com(var):
 
 
 # Пошук за не повними значеннями контактів
+@input_error
 def find(var):
     show_list = []
     for name, record in CONTACTS.items():
@@ -128,8 +131,7 @@ def find(var):
                     f"{name.capitalize()}: {[phone.value for phone in record.phones]}")
     if show_list == []:
         raise Exception
-    print(
-        f"You are looking for '{var}', the most suitable contact is: {show_list}")
+    print(f"You are looking for '{var}', the most suitable contact is: {show_list}")
 
 
 # Сортування папки з файлами
@@ -219,6 +221,17 @@ def find_tag_handler(var):
         print("Dont find any tags!")
 
 
+@input_error
+def find_notes(var):
+    show_list = []
+    for name, record in CONTACTS.items():
+        if re.search(var, record.note):
+            show_list.append(f"{name.capitalize()}; {record.note}")
+    if show_list == []:
+        raise Exception
+    print(f"You are looking for '{var}', the most suitable notes is: {show_list}")
+
+
 COMMANDS = {
     "hello": hello_handler,
     "show all": show_contacts_handler,
@@ -268,7 +281,12 @@ def main():
                 find_com(var)
             except:
                 print("Nothing found in command!")
+            try:
+                find_notes(var)
+            except:
+                print("Nothing found in notes!")
             continue
+
 
 
 if __name__ == "__main__":
