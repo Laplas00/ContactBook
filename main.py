@@ -102,9 +102,8 @@ def iteration():
     for i in CONTACTS.iterator():
         print(i)
 
+
 # Пошук за не повними значеннями команд
-
-
 def find_com(var):
     command_list = []
     for command in COMMANDS:
@@ -115,9 +114,8 @@ def find_com(var):
     print(
         f"You are looking for '{var}', the most suitable command is: {command_list}")
 
+
 # Пошук за не повними значеннями контактів
-
-
 def find(var):
     show_list = []
     for name, record in CONTACTS.items():
@@ -206,6 +204,7 @@ def change_note_handler(var):
             record.update_dict(note)
             print("Contact's note was changed")
 
+
 @input_error
 def find_tag_handler(var):
     tag_for_find = " ".join(var.split()[2:])
@@ -217,7 +216,7 @@ def find_tag_handler(var):
     if show_list != []:
         print(show_list)
     else:
-        print("Dond find any tags!")
+        print("Dont find any tags!")
 
 
 COMMANDS = {

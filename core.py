@@ -6,7 +6,6 @@ import pickle
 class AddressBook(UserDict):
     current_index = 0
     N = 2
-
     def __init__(self):
         try:
             with open("save_file.txt", "rb") as file:
@@ -70,6 +69,7 @@ class Record:
 
     def update_dict(self, note):
         for tag in self.tag.keys():
+            self.note = note
             self.tag["note"] = note
 
     def delete_phone(self, phone_for_delete):
