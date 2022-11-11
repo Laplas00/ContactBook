@@ -140,6 +140,86 @@ def clean_folder():
     print('Done!')
 
 
+@input_error
+def add_note_handler(var):
+    name = var.split()[1]
+    note = " ".join(var.split()[2:])
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.note == "":
+            record.add_note(note)
+            print("Contact's note was added")
+
+
+def show_notes_handler():
+    show_list = []
+    for name, record in CONTACTS.items():
+        if record.note != "":
+            show_list.append(f"{name.capitalize()}; note: {record.note}")
+    if show_list != []:
+        print(show_list)
+    else:
+        print("The are no notes!")
+
+
+@input_error
+def add_tag_handler(var):
+    name = var.split()[1]
+    tag = " ".join(var.split()[2:])
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.note != "":
+            record.add_tag(tag)
+            print("Contact's tag was added")
+        else:
+            print("You should write contact's note before")
+
+
+def show_tags_handler():
+    show_list = []
+    for record in CONTACTS.values():
+        if record.tag != {}:
+            show_list.append(record.tag)
+    if show_list != []:
+        show_list = sorted(show_list, key=lambda x: x['tag'])
+        print(show_list)
+    else:
+        print("The are no tags!")
+
+
+@input_error
+def delete_note_handler(var):
+    name = var.split()[2]
+    record = CONTACTS.data[name]
+    record.note = ""
+    record.tag = {}
+    print("Contact's note was deleted")
+
+
+@input_error
+def change_note_handler(var):
+    name = var.split()[2]
+    note = " ".join(var.split()[3:])
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.note != "":
+            record.update_dict(note)
+            print("Contact's note was changed")
+
+@input_error
+def find_tag_handler(var):
+    tag_for_find = " ".join(var.split()[2:])
+    show_list = []
+    for name, record in CONTACTS.items():
+        if record.tag != {}:
+            if re.search(tag_for_find, record.tag["tag"]):
+                show_list.append(f"{name.capitalize()}; {record.tag}")
+    if show_list != []:
+        print(show_list)
+    else:
+        print("Dond find any tags!")
+
+
 COMMANDS = {
     "hello": hello_handler,
     "show all": show_contacts_handler,
@@ -147,7 +227,9 @@ COMMANDS = {
     "close": quit_handler,
     "good bye": quit_handler,
     "iter": iteration,
-    "sort": clean_folder
+    "sort": clean_folder,
+    "all notes": show_notes_handler,
+    "all tags": show_tags_handler
 }
 
 
@@ -160,12 +242,22 @@ def main():
             days_to_birthday_handler(var)
         elif var.startswith('add'):
             add_contact_handler(var)
+        elif var.startswith('change note'):
+            change_note_handler(var)
         elif var.startswith('change'):
             change_contact_handler(var)
         elif var.startswith('phone'):
             find_contact_handler(var)
-        elif var.startswith('delete'):
+        elif var.startswith('delete phone'):
             delete_contact_handler(var)
+        elif var.startswith('note'):
+            add_note_handler(var)
+        elif var.startswith('tag'):
+            add_tag_handler(var),
+        elif var.startswith('delete note'):
+            delete_note_handler(var),
+        elif var.startswith('find tag'):
+            find_tag_handler(var)
         elif var in COMMANDS:
             COMMANDS[var]()
         else:
