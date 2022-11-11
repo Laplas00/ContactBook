@@ -6,7 +6,6 @@ import pickle
 class AddressBook(UserDict):
     current_index = 0
     N = 2
-
     def __init__(self):
         try:
             with open("save_file.txt", "rb") as file:
@@ -39,8 +38,9 @@ class AddressBook(UserDict):
 
 
 class Record:
-    def __init__(self, name, phone=None, birthday=None):
+    def __init__(self, name, phone = None, birthday = None, note = None):
         self.name = Name(name)
+        self.tag = {}
         if phone:
             self.phones = [Phone(phone)]
         else:
@@ -49,12 +49,28 @@ class Record:
             self.birthday = Birthday(birthday)
         else:
             self.birthday = ""
+        if note:
+            self.note = Note(note)
+        else:
+            self.note = ""
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
+
+    def add_note(self, note):
+        self.note = Note(note).value
+
+    def add_tag(self, tag):
+        self.tag["tag"] = tag
+        self.tag["note"] = self.note
+
+    def update_dict(self, note):
+        for tag in self.tag.keys():
+            self.note = note
+            self.tag["note"] = note
 
     def delete_phone(self, phone_for_delete):
         for phone in self.phones:
@@ -125,3 +141,17 @@ class Birthday(Field):
         except:
             raise ValueError(
                 print("Your birthday should be like this: 20.12.2000"))
+
+
+class Note(Field):
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
+
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value):
+        self.__value = value
