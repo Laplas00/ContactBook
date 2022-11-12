@@ -98,6 +98,19 @@ class Record:
         else:
             print("Contact's birthday wasn't added")
 
+    def interval_birthday(self, interval):
+        if self.birthday != "":
+            birthday = datetime.strptime(self.birthday, '%d.%m.%Y')
+            if ((birthday).replace(year=(datetime.now()).year)) > datetime.now():
+                diference = (((birthday).replace(year=(datetime.now()).year)) - datetime.now()).days
+            else:
+                diference = (((birthday).replace(year=(datetime.now()).year + 1)) - datetime.now()).days
+            if diference < interval:
+                print(f"{(self.name.value).capitalize()}, birthday: {self.birthday}")
+        else:
+            print("No birthday in this interval")
+        
+
 
 class Field:
     def __init__(self, value):

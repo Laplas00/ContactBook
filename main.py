@@ -184,7 +184,7 @@ def add_tag_handler(var):
 
 def show_tags_handler():
     show_list = []
-    for record in CONTACTS.values():
+    for name, record in CONTACTS.items():
         if record.tag != {}:
             show_list.append(record.tag)
     if show_list != []:
@@ -264,6 +264,13 @@ def find_address_handler(var):
         print("The are no address!")
 
 
+@input_error
+def show_list_birthday_handler(var):
+    interval = int(var.split()[1])
+    for record in CONTACTS.values():
+        record.interval_birthday(interval)
+
+
 COMMANDS = {
     "hello": hello_handler,
     "show all": show_contacts_handler,
@@ -282,6 +289,8 @@ def main():
         var = (input("Enter command: ")).lower()
         if var.startswith('add birthday'):
             add_birthday_handler(var)
+        elif var.startswith('birthday'):
+            show_list_birthday_handler(var)
         elif var.startswith('add address'):
             add_address_handler(var)
         elif var.startswith('address'):
