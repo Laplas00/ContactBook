@@ -162,7 +162,7 @@ def show_notes_handler():
     show_list = []
     for name, record in CONTACTS.items():
         if record.note != "":
-            show_list.append(f"{name.capitalize()}; note: {record.note}")
+            show_list.append(f"{name.capitalize()}, note: {record.note}")
     if show_list != []:
         print(show_list)
     else:
@@ -239,6 +239,31 @@ def find_notes(var):
     print(f"You are looking for '{var}', the most suitable notes is: {show_list}")
 
 
+@input_error
+def add_address_handler(var):
+    name = var.split()[2]
+    address = " ".join(var.split()[3:])
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.address == "":
+            record.add_address(address)
+            print("Contact's address was added")
+        else:
+            print("Contact's address was added before")
+
+
+@input_error
+def find_address_handler(var):
+    show_list = []
+    for name, record in CONTACTS.items():
+        if record.address != "":
+            show_list.append(f"{name.capitalize()}, address: {record.address.value}")
+    if show_list != []:
+        print(show_list)
+    else:
+        print("The are no address!")
+
+
 COMMANDS = {
     "hello": hello_handler,
     "show all": show_contacts_handler,
@@ -257,6 +282,10 @@ def main():
         var = (input("Enter command: ")).lower()
         if var.startswith('add birthday'):
             add_birthday_handler(var)
+        elif var.startswith('add address'):
+            add_address_handler(var)
+        elif var.startswith('address'):
+            find_address_handler(var)
         elif var.endswith("birthday"):
             days_to_birthday_handler(var)
         elif var.startswith('add'):
