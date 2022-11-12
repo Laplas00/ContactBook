@@ -287,7 +287,7 @@ def add_email_handler(var):  # ____________________________email
             print("Contact's email was added before")
 
 
-def show_email_handler():
+def show_email_handler():  # ____________________________email
     show_list = []
     for name, record in CONTACTS.items():
         if record.email != "":

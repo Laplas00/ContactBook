@@ -193,7 +193,7 @@ class Email(Field):         # --------------------------------email
     def value(self, value: str):
         if not re.search("[a-zA-Z][a-zA-Z0-9_.]+@\w+\.\w\w+", value):
             raise ValueError(
-                print("Your e-mail incorrect"))
+                print("Your email should be like this: example@gmail.com"))
         self.__value = value
 
 
