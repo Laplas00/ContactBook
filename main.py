@@ -50,8 +50,8 @@ def find_contact_handler(var):
 
 @input_error
 def delete_contact_handler(var):
-    name = var.split()[1]
-    phone_for_delete = var.split()[2]
+    name = var.split()[2]
+    phone_for_delete = var.split()[3]
     record = CONTACTS.data[name]
     record.delete_phone(phone_for_delete)
     print("Contact's phone was deleted")
