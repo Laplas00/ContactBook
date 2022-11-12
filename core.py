@@ -38,9 +38,10 @@ class AddressBook(UserDict):
 
 
 class Record:
-    def __init__(self, name, phone = None, birthday = None, note = None):
+    def __init__(self, name, phone = None, birthday = None, note = None, address = None):
         self.name = Name(name)
         self.tag = {}
+        self.address = ""
         if phone:
             self.phones = [Phone(phone)]
         else:
@@ -66,6 +67,9 @@ class Record:
     def add_tag(self, tag):
         self.tag["tag"] = tag
         self.tag["note"] = self.note
+
+    def add_address(self, address):
+        self.address = Address(address)
 
     def update_dict(self, note):
         for tag in self.tag.keys():
@@ -97,7 +101,16 @@ class Record:
 
 class Field:
     def __init__(self, value):
+        self.__value = None
         self.value = value
+
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value):
+        self.__value = value
 
 
 class Name(Field):
@@ -144,14 +157,8 @@ class Birthday(Field):
 
 
 class Note(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
+    pass
 
-    @property
-    def value(self):
-        return self.__value
 
-    @value.setter
-    def value(self, value):
-        self.__value = value
+class Address(Field):
+    pass
