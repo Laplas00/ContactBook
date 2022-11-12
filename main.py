@@ -108,13 +108,20 @@ def iteration():
 @input_error
 def find_com(var):
     command_list = []
-    for command in COMMANDS:
-        if re.search(var, command):
-            command_list.append(command)
+    for command in COMMANDS.keys():
+        command_dict = {}
+        count = 0
+        for i in var:
+            if re.search(i, command):
+                count += 1
+        command_dict["command"] = command
+        command_dict["count"] = count
+        command_list.append(command_dict)
     if command_list == []:
         raise Exception
+    command_list = sorted(command_list, key=lambda x: x['count'], reverse=True)
     print(
-        f"You are looking for '{var}', the most suitable command is: {command_list}")
+        f"You are looking for '{var}', the most suitable command is: {list(command_list[0].values())[0]}")
 
 
 # Пошук за не повними значеннями контактів
