@@ -40,12 +40,9 @@ class AddressBook(UserDict):
 
 
 class Record:
-    # --------------------------------email
     def __init__(self, name, phone=None, birthday=None, note=None, address=None, email=None):
-        
         self.name = Name(name)
         self.tag = {}
-        self.address = ""
         if phone:
             self.phones = [Phone(phone)]
         else:
@@ -58,10 +55,14 @@ class Record:
             self.note = Note(note)
         else:
             self.note = ""
-        if email:  # --------------------------------email
+        if email:
             self.email = Email(email)
         else:
             self.email = ""
+        if address:
+            self.address = Address(address)
+        else:
+            self.address = ""
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
@@ -79,7 +80,7 @@ class Record:
     def add_address(self, address):
         self.address = Address(address)
 
-    def add_email(self, email):  # --------------------------------email
+    def add_email(self, email):
         self.email = Email(email)
 
     def update_dict(self, note):
@@ -181,7 +182,7 @@ class Birthday(Field):
                 print("Your birthday should be like this: 20.12.2000"))
 
 
-class Email(Field):         # --------------------------------email
+class Email(Field):
     def __init__(self, value):
         self.__value = None
         self.value = value
@@ -200,7 +201,11 @@ class Email(Field):         # --------------------------------email
 
 class Note(Field):
     pass
+    # def __init__(self, value):
+    #     super().__init__()
 
 
 class Address(Field):
     pass
+    # def __init__(self, value):
+    #     super().__init__()
