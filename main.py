@@ -21,6 +21,7 @@ def hello_handler():
     print("How can I help you?")
 
 
+
 def quit_handler():
     print("Good bye!")
     CONTACTS.save_contacts()
@@ -267,6 +268,7 @@ def find_address_handler(var):
         print("The are no address!")
 
 
+
 @input_error
 def show_list_birthday_handler(var):
     interval = int(var.split()[1])
@@ -299,55 +301,39 @@ def show_email_handler():  # ____________________________email
         print("The are no notes!")
 
 
-COMMANDS = {
-    "hello": hello_handler,
-    "show all": show_contacts_handler,
-    "exit": quit_handler,
-    "close": quit_handler,
-    "good bye": quit_handler,
-    "iter": iteration,
-    "sort": clean_folder,
-    "all notes": show_notes_handler,
-    "all tags": show_tags_handler,
-    "all email": show_email_handler
-}
-
 
 def main():
+
+    COMMANDS = {
+    "hello": [hello_handler, 'show commands'],
+    "add": [add_contact_handler, '[name] [phone]'],
+    "all notes": [show_notes_handler,],
+    "change note" : [change_note_handler,],
+    "all tags": [show_tags_handler,],
+    "add birthday" : [add_birthday_handler, '[name] [dd.mm.yyyy]'],
+    "add address" : [add_address_handler,],
+    "adress": [find_address_handler,],
+    "birthday" : [days_to_birthday_handler, '[name] days until birthday'],
+    "show all": [show_contacts_handler, 'show all contacts'],  
+    "all email": [show_email_handler, 'show all emails'],
+    "iter": [iteration, ],
+    "sort": [clean_folder,],
+    "change" : [change_contact_handler,],
+    "phone" : [find_contact_handler,],
+    "delete phone" : [delete_contact_handler,],
+    "note" : [add_note_handler,],
+    "tag" : [add_tag_handler,],
+    "delete note" : [delete_note_handler,],
+    "find tag" : [find_tag_handler,]
+    }
+
     while True:
         var = (input("Enter command: ")).lower()
-        if var.startswith('add birthday'):
-            add_birthday_handler(var)
-        elif var.startswith('birthday'):
-            show_list_birthday_handler(var)
-        if var.startswith('add email'):
-            add_email_handler(var)  # _____________________________email
-        elif var.startswith('add address'):
-            add_address_handler(var)
-        elif var.startswith('address'):
-            find_address_handler(var)
-        elif var.endswith("birthday"):
-            days_to_birthday_handler(var)
-        elif var.startswith('add'):
-            add_contact_handler(var)
-        elif var.startswith('change note'):
-            change_note_handler(var)
-        elif var.startswith('change'):
-            change_contact_handler(var)
-        elif var.startswith('phone'):
-            find_contact_handler(var)
-        elif var.startswith('delete phone'):
-            delete_contact_handler(var)
-        elif var.startswith('note'):
-            add_note_handler(var)
-        elif var.startswith('tag'):
-            add_tag_handler(var),
-        elif var.startswith('delete note'):
-            delete_note_handler(var),
-        elif var.startswith('find tag'):
-            find_tag_handler(var)
-        elif var in COMMANDS:
+        if var in COMMANDS:
+
             COMMANDS[var]()
+        elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
+            quit_handler()
         else:
             try:
                 find(var)
