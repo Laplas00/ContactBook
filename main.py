@@ -18,7 +18,11 @@ def input_error(handler):
 
 
 def hello_handler():
-    print("How can I help you?")
+    print("Hello user i have this commands")
+    for com in COMMANDS:
+        print('{:<15} - {:>27}'.format(com, COMMANDS[com][-1]))
+
+
 
 
 
@@ -302,6 +306,7 @@ def show_email_handler():  # ____________________________email
 
 
 
+
 def main():
 
     COMMANDS = {
@@ -328,7 +333,7 @@ def main():
     }
 
     while True:
-        var = (input("Enter command: ")).lower()
+        var = (input("Enter command: ")).lower().strip()
         if var in COMMANDS:
 
             COMMANDS[var]()

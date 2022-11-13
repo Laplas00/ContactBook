@@ -4,7 +4,7 @@ import shutil
 
 
 def get_main_path():
-
+    
     main_path = ""
     args = sys.argv
     if len(args) == 1:
