@@ -10,7 +10,7 @@ def input_error(handler):
     def wrapper(*args, **kwargs):
         try:
             handler(*args, **kwargs)
-        except (ValueError, IndexError, UnboundLocalError):
+        except (ValueError, IndexError, UnboundLocalError, TypeError):
             print("Error. Give me correct name, phone, birthday or email, please")
         except KeyError:
             print("Error. Enter user name, please")
@@ -25,7 +25,6 @@ def hello_handler():
 
 
 
-
 def quit_handler():
     print("Good bye!")
     CONTACTS.save_contacts()
@@ -34,8 +33,8 @@ def quit_handler():
 
 @input_error
 def add_contact_handler(var):
-    name = var.split()[1]
-    phone = var.split()[2]
+    name = var.split()[0]
+    phone = var.split()[1]
     if name in CONTACTS:
         record = CONTACTS.data[name]
         record.add_phone(phone)
@@ -305,38 +304,41 @@ def show_email_handler():  # ____________________________email
         print("The are no notes!")
 
 
+COMMANDS = {
+     "hello": [hello_handler, 'show commands'],
+     "all tags": [show_tags_handler, 'show all tags'],
+     "all notes": [show_notes_handler, 'show all notes'],
+     "add": [add_contact_handler, '[name] [phone]'],
+     "add birthday" : [add_birthday_handler, '[name] [dd.mm.yyyy]'],
+     "add address" : [add_address_handler, '???'],
+     "change note" : [change_note_handler, '[name] [new_note]'],
+     "adress": [find_address_handler,'???'],
+     "birthday" : [days_to_birthday_handler, '[name] days until birthday'],
+     "show all": [show_contacts_handler, 'show all contacts'],  
+     "all email": [show_email_handler, 'show all emails'],
+     "iter": [iteration, 'iteration with all notes'],
+     "sort": [clean_folder,'???'],
+     "change" : [change_contact_handler,'[name] [phone] [new_phon]e'],
+     "phone" : [find_contact_handler, '[name]'],
+     "delete phone" : [delete_contact_handler, '[name] [number]'],
+     "note" : [add_note_handler, '[name] [note]'],
+     "tag" : [add_tag_handler, '[name] [tag]'],
+     "delete note" : [delete_note_handler, '[name]'],
+     "find tag" : [find_tag_handler, '[tag_name]']}
 
 
 def main():
 
-    COMMANDS = {
-    "hello": [hello_handler, 'show commands'],
-    "add": [add_contact_handler, '[name] [phone]'],
-    "all notes": [show_notes_handler,],
-    "change note" : [change_note_handler,],
-    "all tags": [show_tags_handler,],
-    "add birthday" : [add_birthday_handler, '[name] [dd.mm.yyyy]'],
-    "add address" : [add_address_handler,],
-    "adress": [find_address_handler,],
-    "birthday" : [days_to_birthday_handler, '[name] days until birthday'],
-    "show all": [show_contacts_handler, 'show all contacts'],  
-    "all email": [show_email_handler, 'show all emails'],
-    "iter": [iteration, ],
-    "sort": [clean_folder,],
-    "change" : [change_contact_handler,],
-    "phone" : [find_contact_handler,],
-    "delete phone" : [delete_contact_handler,],
-    "note" : [add_note_handler,],
-    "tag" : [add_tag_handler,],
-    "delete note" : [delete_note_handler,],
-    "find tag" : [find_tag_handler,]
-    }
+
 
     while True:
         var = (input("Enter command: ")).lower().strip()
-        if var in COMMANDS:
-
-            COMMANDS[var]()
+        if var in COMMANDS and COMMANDS[var][-1].endswith(']'):
+            print('тут нужны арги')
+            args = input('args: ')
+            COMMANDS[var][0](args)
+        elif var in COMMANDS:
+            COMMANDS[var][0]()
         elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
             quit_handler()
         else:
