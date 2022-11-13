@@ -18,11 +18,13 @@ def input_error(handler):
 
 
 def hello_handler():
+
     print("Hello user i have this commands\n")
 
     for com in COMMANDS:
         print('{:<23} - {:>27}'.format(com, COMMANDS[com][-1]))
     print('\n')
+
 
 
 
@@ -326,7 +328,7 @@ COMMANDS = {
      "delete note" : [delete_note_handler, '[name]'],
      "change phone" : [change_contact_handler,'[name] [phone] [new_phone]'],
      "delete phone" : [delete_contact_handler, '[name] [number]'],
-     "find phone" : [find_contact_handler, ' -- [name]'],
+     "find phone" : [find_contact_handler, '--- [name]'],
      "find tag" : [find_tag_handler, '[tag_name]'],
      "all tags": [show_tags_handler, 'show all tags'],
      "all notes": [show_notes_handler, 'show all notes'],
@@ -339,16 +341,23 @@ COMMANDS = {
 }
 
 
+
+
 def main():
+
+
 
     while True:
         var = (input("Enter command: ")).lower().strip()
+
         if var in COMMANDS and COMMANDS[var][-1].endswith(']'):
             print('тут нужны арги')
             args = input('args: ')
             COMMANDS[var][0](args)
-        elif var in COMMANDS:
+ 
+        if var in COMMANDS:
             COMMANDS[var][0]()
+            
         elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
             quit_handler()
         else:
