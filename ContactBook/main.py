@@ -1,6 +1,6 @@
 import re
-from core import *
-from sort import *
+from ContactBook.core import *
+from ContactBook.sort import *
 
 
 CONTACTS = AddressBook()
