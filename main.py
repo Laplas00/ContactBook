@@ -11,7 +11,7 @@ def input_error(handler):
         try:
             handler(*args, **kwargs)
         except (ValueError, IndexError, UnboundLocalError):
-            print("Error. Give me correct name, phone or birthday, please")
+            print("Error. Give me correct name, phone, birthday or email, please")
         except KeyError:
             print("Error. Enter user name, please")
     return wrapper
@@ -51,8 +51,8 @@ def find_contact_handler(var):
 
 @input_error
 def delete_contact_handler(var):
-    name = var.split()[1]
-    phone_for_delete = var.split()[2]
+    name = var.split()[2]
+    phone_for_delete = var.split()[3]
     record = CONTACTS.data[name]
     record.delete_phone(phone_for_delete)
     print("Contact's phone was deleted")
@@ -139,7 +139,8 @@ def find(var):
                     f"{name.capitalize()}: {[phone.value for phone in record.phones]}")
     if show_list == []:
         raise Exception
-    print(f"You are looking for '{var}', the most suitable contact is: {show_list}")
+    print(
+        f"You are looking for '{var}', the most suitable contact is: {show_list}")
 
 
 # Сортування папки з файлами
@@ -185,7 +186,7 @@ def add_tag_handler(var):
 
 def show_tags_handler():
     show_list = []
-    for record in CONTACTS.values():
+    for name, record in CONTACTS.items():
         if record.tag != {}:
             show_list.append(record.tag)
     if show_list != []:
@@ -237,7 +238,8 @@ def find_notes(var):
             show_list.append(f"{name.capitalize()}; {record.note}")
     if show_list == []:
         raise Exception
-    print(f"You are looking for '{var}', the most suitable notes is: {show_list}")
+    print(
+        f"You are looking for '{var}', the most suitable notes is: {show_list}")
 
 
 @input_error
@@ -258,13 +260,45 @@ def find_address_handler(var):
     show_list = []
     for name, record in CONTACTS.items():
         if record.address != "":
-            show_list.append(f"{name.capitalize()}, address: {record.address.value}")
+            show_list.append(
+                f"{name.capitalize()}, address: {record.address.value}")
     if show_list != []:
         print(show_list)
     else:
         print("The are no address!")
 
 
+
+@input_error
+def show_list_birthday_handler(var):
+    interval = int(var.split()[1])
+    for record in CONTACTS.values():
+        record.interval_birthday(interval)
+
+
+@input_error
+def add_email_handler(var):  # ____________________________email
+    name = var.split()[2]
+    email = var.split()[3]
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.email == "":
+            record.add_email(email)
+            print("Contact's email was added")
+        else:
+            print("Contact's email was added before")
+
+
+def show_email_handler():  # ____________________________email
+    show_list = []
+    for name, record in CONTACTS.items():
+        if record.email != "":
+            show_list.append(
+                f"{name.capitalize()}, email: {record.email.value}")
+    if show_list != []:
+        print(show_list)
+    else:
+        print("The are no notes!")
 
 
 
@@ -280,7 +314,8 @@ def main():
     "add address" : [add_address_handler,],
     "adress": [find_address_handler,],
     "birthday" : [days_to_birthday_handler, '[name] days until birthday'],
-    "show all": [show_contacts_handler, 'show all contacts'],    
+    "show all": [show_contacts_handler, 'show all contacts'],  
+    "all email": [show_email_handler, 'show all emails'],
     "iter": [iteration, ],
     "sort": [clean_folder,],
     "change" : [change_contact_handler,],
@@ -294,8 +329,8 @@ def main():
 
     while True:
         var = (input("Enter command: ")).lower()
-        
         if var in COMMANDS:
+
             COMMANDS[var]()
         elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
             quit_handler()
@@ -313,7 +348,6 @@ def main():
             except:
                 print("Nothing found in notes!")
             continue
-
 
 
 if __name__ == "__main__":
