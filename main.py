@@ -18,9 +18,11 @@ def input_error(handler):
 
 
 def hello_handler():
-    print("Hello user i have this commands")
+    print("Hello user i have this commands\n")
+
     for com in COMMANDS:
-        print('{:<15} - {:>27}'.format(com, COMMANDS[com][-1]))
+        print('{:<23} - {:>27}'.format(com, COMMANDS[com][-1]))
+    print('\n')
 
 
 
@@ -195,8 +197,6 @@ def add_tag_handler(var):
 def show_tags_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        print(name, record)
-        print(record.tag)
         if record.tag != {}:
             show_list.append(record.tag)
     if show_list != []:
@@ -217,13 +217,16 @@ def delete_note_handler(var):
 
 @input_error
 def change_note_handler(var):
-    name = var.split()[2]
-    note = " ".join(var.split()[3:])
+    name = var.split()[0]
+    note = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
         if record.note != "":
             record.update_dict(note)
             print("Contact's note was changed")
+        else:
+            print('No note to change')
+        
 
 
 @input_error
@@ -318,6 +321,7 @@ COMMANDS = {
      "add address" : [add_address_handler, '[name] [adress]'],
      "add note" : [add_note_handler, '[name] [note]'],
      "add tag" : [add_tag_handler, '[name] [tag]'],
+     "add email" : [add_email_handler, '[name] [email]'],
      "change note" : [change_note_handler, '[name] [new_note]'],
      "delete note" : [delete_note_handler, '[name]'],
      "change phone" : [change_contact_handler,'[name] [phone] [new_phone]'],
