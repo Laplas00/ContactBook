@@ -20,9 +20,7 @@ def input_error(handler):
 
 
 def hello_handler():
-
     print("Hello user i have this commands\n")
-
     for com in COMMANDS:
         print('{:<23} - {:>27}'.format(com, COMMANDS[com][-1]))
     print('\n')
@@ -314,7 +312,7 @@ COMMANDS = {
     "hello": [hello_handler, 'show commands'],
     "add": [add_contact_handler, '[name] [phone]'],
     "add birthday": [add_birthday_handler, '[name] [dd.mm.yyyy]'],
-    "add address": [add_address_handler, '[name] [adress]'],
+    "add address": [add_address_handler, '[name] [address]'],
     "add note": [add_note_handler, '[name] [note]'],
     "add tag": [add_tag_handler, '[name] [tag]'],
     "add email": [add_email_handler, '[name] [email]'],
@@ -322,16 +320,17 @@ COMMANDS = {
     "delete note": [delete_note_handler, '[name]'],
     "change phone": [change_contact_handler, '[name] [phone] [new_phone]'],
     "delete phone": [delete_contact_handler, '[name] [number]'],
-    "find phone": [find_contact_handler, '--- [name]'],
+    "find phone": [find_contact_handler, '[name]'],
     "find tag": [find_tag_handler, '[tag_name]'],
     "all tags": [show_tags_handler, 'show all tags'],
     "all notes": [show_notes_handler, 'show all notes'],
     "all email": [show_email_handler, 'show all emails'],
     "show all": [show_contacts_handler, 'show all contacts'],
     "days before birthday": [days_to_birthday_handler, '[name]'],
+    "to birthday": [show_list_birthday_handler, '[number of days]'],
     "iter": [iteration, 'iteration with all notes'],
-    "adress": [find_address_handler, 'All adress'],
-    "sort": [clean_folder, '???'],
+    "all address": [find_address_handler, 'show all address'],
+    "sort": [clean_folder, 'to sort your folder'],
 }
 
 
@@ -341,8 +340,7 @@ def main():
         var = (input("Enter command: ")).lower().strip()
 
         if var in COMMANDS and COMMANDS[var][-1].endswith(']'):
-            print('Enter arguments')
-            args = input('args: ')
+            args = input('Enter arguments: ')
             COMMANDS[var][0](args)
 
         if var in COMMANDS:
