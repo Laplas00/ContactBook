@@ -42,6 +42,7 @@ class AddressBook(UserDict):
 class Record:
     # --------------------------------email
     def __init__(self, name, phone=None, birthday=None, note=None, address=None, email=None):
+        
         self.name = Name(name)
         self.tag = {}
         self.address = ""
