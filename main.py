@@ -274,6 +274,31 @@ def show_list_birthday_handler(var):
         record.interval_birthday(interval)
 
 
+@input_error
+def add_email_handler(var):
+    name = var[0]
+    email = var[1]
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        if record.email == "":
+            record.add_email(email)
+            print("Contact's email was added")
+        else:
+            print("Contact's email was added before")
+
+
+def show_email_handler():
+    show_list = []
+    for name, record in CONTACTS.items():
+        if record.email != "":
+            show_list.append(
+                f"{name.capitalize()}, email: {record.email.value}")
+    if show_list != []:
+        print(show_list)
+    else:
+        print("The are no notes!")
+
+
 def help_handler():
     commands = ["hello", "show_all", "exit",
                 "close", "good_bye", "iter",
@@ -281,7 +306,8 @@ def help_handler():
                 "add_birthday", "address", "add",
                 "change_note", "change", "phone",
                 "delete_phone", "note", "tag",
-                "delete_note", "find_tag", "help"
+                "delete_note", "find_tag", "add_email",
+                "all_email", "help"
                 ]
     print(f'All commands: {commands}')
 
@@ -310,6 +336,8 @@ COMMANDS = {
     "tag": add_tag_handler,
     "delete_note": delete_note_handler,
     "find_tag": find_tag_handler,
+    "add_email": add_email_handler,
+    "all_email": show_email_handler,
     "help": help_handler
 }
 

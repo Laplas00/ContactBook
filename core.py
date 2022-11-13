@@ -1,11 +1,13 @@
 from collections import UserDict
 from datetime import datetime
 import pickle
+import re
 
 
 class AddressBook(UserDict):
     current_index = 0
     N = 2
+
     def __init__(self):
         try:
             with open("save_file.txt", "rb") as file:
@@ -38,7 +40,7 @@ class AddressBook(UserDict):
 
 
 class Record:
-    def __init__(self, name, phone = None, birthday = None, note = None, address = None):
+    def __init__(self, name, phone=None, birthday=None, note=None, address=None, email=None):
         self.name = Name(name)
         self.tag = {}
         self.address = ""
@@ -54,6 +56,10 @@ class Record:
             self.note = Note(note)
         else:
             self.note = ""
+        if email:
+            self.email = Email(email)
+        else:
+            self.email = ""
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
@@ -70,6 +76,9 @@ class Record:
 
     def add_address(self, address):
         self.address = Address(address)
+
+    def add_email(self, email):
+        self.email = Email(email)
 
     def update_dict(self, note):
         for tag in self.tag.keys():
@@ -102,14 +111,15 @@ class Record:
         if self.birthday != "":
             birthday = datetime.strptime(self.birthday, '%d.%m.%Y')
             if ((birthday).replace(year=(datetime.now()).year)) > datetime.now():
-                diference = (((birthday).replace(year=(datetime.now()).year)) - datetime.now()).days
+                diference = (
+                    ((birthday).replace(year=(datetime.now()).year)) - datetime.now()).days
             else:
-                diference = (((birthday).replace(year=(datetime.now()).year + 1)) - datetime.now()).days
+                diference = (
+                    ((birthday).replace(year=(datetime.now()).year + 1)) - datetime.now()).days
             if diference < interval:
                 print(f"{(self.name.value).capitalize()}, birthday: {self.birthday}")
         else:
             print("No birthday in this interval")
-        
 
 
 class Field:
@@ -167,6 +177,23 @@ class Birthday(Field):
         except:
             raise ValueError(
                 print("Your birthday should be like this: 20.12.2000"))
+
+
+class Email(Field):
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
+
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value: str):
+        if not re.search("[a-zA-Z][a-zA-Z0-9_.]+@\w+\.\w\w+", value):
+            raise ValueError(
+                print("Your email should be like this: example@gmail.com"))
+        self.__value = value
 
 
 class Note(Field):
