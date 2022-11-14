@@ -49,6 +49,7 @@ class Record:
         self.address = Address(address) if address else ""
         self.tag = {}
 
+
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
 
@@ -149,6 +150,7 @@ class Birthday(Field):
 
     def __str__(self) -> str:
         return datetime.strftime(self._value, '%d.%m.%Y')
+
 
 
 class Email(Field):
