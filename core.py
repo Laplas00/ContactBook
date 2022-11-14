@@ -23,7 +23,7 @@ class AddressBook(UserDict):
         names = [name for name in self.data]
         while len(self.data) >= AddressBook.current_index:
             for name in names[AddressBook.current_index: min(len(self.data), AddressBook.current_index + AddressBook.N)]:
-                if self.data[name].birthday != "":
+                if self.data[name].birthday:
                     show_list.append("{:<10}{:^35}{:>10}".format((self.data[name].name.value).capitalize(
                     ), " ".join([phone.value for phone in self.data[name].phones]), self.data[name].birthday))
                 else:
@@ -34,7 +34,7 @@ class AddressBook(UserDict):
             show_list = []
 
     def save_contacts(self):
-        if self.data != {}:
+        if self.data:
             with open("save_file.txt", "wb") as file:
                 contacts = pickle.dump(self.data, file)
 
@@ -111,7 +111,7 @@ class Record:
             print("Contact's birthday wasn't added")
 
     def interval_birthday(self, interval):
-        if self.birthday != "":
+        if self.birthday:
             birthday = datetime.strptime(self.birthday, '%d.%m.%Y')
             if ((birthday).replace(year=(datetime.now()).year)) > datetime.now():
                 diference = (
