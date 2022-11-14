@@ -81,7 +81,7 @@ def add_birthday_handler(var):
     birthday = var.split()[1]
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.birthday == "":
+        if not record.birthday:
             record.add_birthday(birthday)
             print("Contact's birthday was added")
         else:
@@ -100,7 +100,7 @@ def days_to_birthday_handler(var):
 
 def show_contacts_handler():
     for name, record in CONTACTS.items():
-        if record.birthday != "":
+        if record.birthday:
             print("{:<10}{:^35}{:>10}".format(name.capitalize(), " ".join(
                 [phone.value for phone in record.phones]), record.birthday))
         else:
@@ -160,7 +160,7 @@ def add_note_handler(var):
     note = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.note == "":
+        if not record.note:
             record.add_note(note)
             print("Contact's note was added")
     else:
@@ -170,9 +170,9 @@ def add_note_handler(var):
 def show_notes_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        if record.note != "":
+        if record.note:
             show_list.append(f"{name.capitalize()}, note: {record.note}")
-    if show_list != []:
+    if show_list:
         print(show_list)
     else:
         print("The are no notes!")
@@ -184,7 +184,7 @@ def add_tag_handler(var):
     tag = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.note != "":
+        if record.note:
             record.add_tag(tag)
             print("Contact's tag was added")
         else:
@@ -194,9 +194,9 @@ def add_tag_handler(var):
 def show_tags_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        if record.tag != {}:
+        if record.tag:
             show_list.append(record.tag)
-    if show_list != []:
+    if show_list:
         show_list = sorted(show_list, key=lambda x: x['tag'])
         print(show_list)
     else:
@@ -218,7 +218,7 @@ def change_note_handler(var):
     note = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.note != "":
+        if record.note:
             record.update_dict(note)
             print("Contact's note was changed")
         else:
@@ -230,10 +230,10 @@ def find_tag_handler(var):
     tag_for_find = " ".join(var.split()[2:])
     show_list = []
     for name, record in CONTACTS.items():
-        if record.tag != {}:
+        if record.tag:
             if re.search(tag_for_find, record.tag["tag"]):
                 show_list.append(f"{name.capitalize()}; {record.tag}")
-    if show_list != []:
+    if show_list:
         print(show_list)
     else:
         print("Dont find any tags!")
@@ -245,7 +245,7 @@ def find_notes(var):
     for name, record in CONTACTS.items():
         if re.search(var, record.note):
             show_list.append(f"{name.capitalize()}; {record.note}")
-    if show_list == []:
+    if not show_list:
         raise Exception
     print(
         f"You are looking for '{var}', the most suitable notes is: {show_list}")
@@ -257,7 +257,7 @@ def add_address_handler(var):
     address = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.address == "":
+        if not record.address:
             record.add_address(address)
             print("Contact's address was added")
         else:
@@ -267,10 +267,10 @@ def add_address_handler(var):
 def find_address_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        if record.address != "":
+        if record.address:
             show_list.append(
                 f"{name.capitalize()}, address: {record.address.value}")
-    if show_list != []:
+    if show_list:
         print(show_list)
     else:
         print("The are no address!")
@@ -289,7 +289,7 @@ def add_email_handler(var):
     email = var.split()[1]
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if record.email == "":
+        if not record.email:
             record.add_email(email)
             print("Contact's email was added")
         else:
@@ -299,10 +299,10 @@ def add_email_handler(var):
 def show_email_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        if record.email != "":
+        if record.email:
             show_list.append(
                 f"{name.capitalize()}, email: {record.email.value}")
-    if show_list != []:
+    if show_list:
         print(show_list)
     else:
         print("The are no notes!")
