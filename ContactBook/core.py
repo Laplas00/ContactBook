@@ -49,7 +49,6 @@ class Record:
         self.address = Address(address) if address else ""
         self.tag = {}
 
-
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
 

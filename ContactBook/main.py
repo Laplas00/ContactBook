@@ -108,9 +108,16 @@ def show_contacts_handler():
                 [phone.value for phone in record.phones]), "-"))
 
 
-def iteration():
-    for i in CONTACTS.iterator():
-        print(i)
+@input_error
+def iteration(var):
+    count = int(var[0])
+    generator = CONTACTS.iterator()
+    for _ in range(count):
+        try:
+            print(next(generator))
+        except StopIteration:
+            print('No more contacts')
+            break
 
 
 @input_error
@@ -328,7 +335,7 @@ COMMANDS = {
     "show all": [show_contacts_handler, 'show all contacts'],
     "days before birthday": [days_to_birthday_handler, '[name]'],
     "to birthday": [show_list_birthday_handler, '[number of days]'],
-    "iter": [iteration, 'iteration with all notes'],
+    "iter": [iteration, '[number of notes]'],
     "all address": [find_address_handler, 'show all address'],
     "sort": [clean_folder, 'to sort your folder'],
 }
