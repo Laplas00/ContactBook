@@ -34,7 +34,7 @@ class AddressBook(UserDict):
             show_list = []
 
     def save_contacts(self):
-        if self.data != {}:
+        if self.data:
             with open("save_file.txt", "wb") as file:
                 contacts = pickle.dump(self.data, file)
 
@@ -42,27 +42,13 @@ class AddressBook(UserDict):
 class Record:
     def __init__(self, name, phone=None, birthday=None, note=None, address=None, email=None):
         self.name = Name(name)
+        self.phones = [Phone(phone)] if phone else []
+        self.birthday = Birthday(birthday) if birthday else ""
+        self.note = Note(note) if note else ""
+        self.email = Email(email) if email else ""
+        self.address = Address(address) if address else ""
         self.tag = {}
-        if phone:
-            self.phones = [Phone(phone)]
-        else:
-            self.phones = []
-        if birthday:
-            self.birthday = Birthday(birthday)
-        else:
-            self.birthday = ""
-        if note:
-            self.note = Note(note)
-        else:
-            self.note = ""
-        if email:
-            self.email = Email(email)
-        else:
-            self.email = ""
-        if address:
-            self.address = Address(address)
-        else:
-            self.address = ""
+
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday).value.strftime('%d.%m.%Y')
@@ -127,16 +113,16 @@ class Record:
 
 class Field:
     def __init__(self, value):
-        self.__value = None
+        self._value = None
         self.value = value
 
     @property
     def value(self):
-        return self.__value
+        return self._value
 
     @value.setter
     def value(self, value):
-        self.__value = value
+        self._value = value
 
 
 class Name(Field):
@@ -144,59 +130,36 @@ class Name(Field):
 
 
 class Phone(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
-
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value: str):
         if not all((value.startswith('+380'), value[1:].isdigit(), len(value) == 13)):
             raise ValueError(
                 print("Your phone should be like this: +380888888888"))
-        self.__value = value
+        self._value = value
 
 
 class Birthday(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
-
-    def __str__(self) -> str:
-        return datetime.strftime(self.__value, '%d.%m.%Y')
-
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value):
         try:
             birthday = datetime.strptime(value, '%d.%m.%Y')
-            self.__value = birthday
+            self._value = birthday
         except:
             raise ValueError(
                 print("Your birthday should be like this: 20.12.2000"))
 
+    def __str__(self) -> str:
+        return datetime.strftime(self._value, '%d.%m.%Y')
+
+
 
 class Email(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
-
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value: str):
         if not re.search("[a-zA-Z][a-zA-Z0-9_.]+@\w+\.\w\w+", value):
             raise ValueError(
                 print("Your email should be like this: example@gmail.com"))
-        self.__value = value
+        self._value = value
 
 
 class Note(Field):
