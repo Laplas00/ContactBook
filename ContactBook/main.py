@@ -233,8 +233,6 @@ def find_tag_handler(var):
                 show_list.append(f"{name.capitalize()}; {record.tag}")
     if show_list:
         print(show_list)
-    else:
-
 
 
 @input_error
