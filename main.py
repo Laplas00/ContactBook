@@ -10,12 +10,24 @@ def input_error(handler):
     def wrapper(*args, **kwargs):
         try:
             handler(*args, **kwargs)
-        except (ValueError, IndexError, UnboundLocalError):
-            print("Error. Give me correct name, phone, birthday or email, please")
+            return True
+        except UnboundLocalError:
+            print("UnboundLocalError.")
+            return False
+        except ValueError:  
+            for  i in args:
+                print(i)
+            print('Value error')
+            return False
+        except IndexError:
+            print('Index error')
+            return False
         except TypeError:
-            pass
+            print('Typee error')
+            return False
         except KeyError:
             print("Error. Enter user name, please")
+            return False
     return wrapper
 
 
@@ -34,15 +46,16 @@ def quit_handler():
 
 @input_error
 def add_contact_handler(var):
-    name = var.split()[0]
-    phone = var.split()[1]
+    
+    name, phone = var.split()[0], var.split()[1]
+    
     if name in CONTACTS:
         record = CONTACTS.data[name]
         record.add_phone(phone)
     else:
         record = Record(name, phone)
         CONTACTS.add_record(record)
-    print("New contact was added")
+        
 
 
 @input_error
@@ -51,8 +64,6 @@ def find_contact_handler(var):
         if name == var.split()[0]:
             print(
                 f"{name.capitalize()}: {[phone.value for phone in record.phones]}")
-        else:
-            print('no')
 
 
 @input_error
@@ -61,7 +72,6 @@ def delete_contact_handler(var):
     phone_for_delete = var.split()[1]
     record = CONTACTS.data[name]
     record.delete_phone(phone_for_delete)
-    print("Contact's phone was deleted")
 
 
 @input_error
@@ -72,7 +82,6 @@ def change_contact_handler(var):
     if phone_for_change and new_phone:
         record = CONTACTS.data[name]
         record.change_phone(phone_for_change, new_phone)
-        print("Contact was changed")
 
 
 @input_error
@@ -83,11 +92,7 @@ def add_birthday_handler(var):
         record = CONTACTS.data[name]
         if not record.birthday:
             record.add_birthday(birthday)
-            print("Contact's birthday was added")
-        else:
-            print("Contact's birthday was added before")
-    else:
-        print('This contact dont exist')
+            
 
 
 @input_error
@@ -151,7 +156,7 @@ def find(var):
 
 def clean_folder():
     get_main_path()
-    print('Done!')
+    print('Done')
 
 
 @input_error
@@ -162,9 +167,8 @@ def add_note_handler(var):
         record = CONTACTS.data[name]
         if not record.note:
             record.add_note(note)
-            print("Contact's note was added")
     else:
-        print('name dont exist')
+        raise ValueError
 
 
 def show_notes_handler():
@@ -175,7 +179,7 @@ def show_notes_handler():
     if show_list:
         print(show_list)
     else:
-        print("The are no notes!")
+        raise IndexError
 
 
 @input_error
@@ -186,7 +190,6 @@ def add_tag_handler(var):
         record = CONTACTS.data[name]
         if record.note:
             record.add_tag(tag)
-            print("Contact's tag was added")
         else:
             print("You should write contact's note before")
 
@@ -209,7 +212,7 @@ def delete_note_handler(var):
     record = CONTACTS.data[name]
     record.note = ""
     record.tag = {}
-    print("Contact's note was deleted")
+
 
 
 @input_error
@@ -220,9 +223,8 @@ def change_note_handler(var):
         record = CONTACTS.data[name]
         if record.note:
             record.update_dict(note)
-            print("Contact's note was changed")
         else:
-            print('No note to change')
+            raise KeyError
 
 
 @input_error
@@ -236,7 +238,7 @@ def find_tag_handler(var):
     if show_list:
         print(show_list)
     else:
-        print("Dont find any tags!")
+        raise KeyError
 
 
 @input_error
@@ -259,9 +261,8 @@ def add_address_handler(var):
         record = CONTACTS.data[name]
         if not record.address:
             record.add_address(address)
-            print("Contact's address was added")
-        else:
-            print("Contact's address was added before")
+            
+        
 
 
 def find_address_handler():
@@ -273,7 +274,7 @@ def find_address_handler():
     if show_list:
         print(show_list)
     else:
-        print("The are no address!")
+        return False
 
 
 @input_error
@@ -291,9 +292,8 @@ def add_email_handler(var):
         record = CONTACTS.data[name]
         if not record.email:
             record.add_email(email)
-            print("Contact's email was added")
         else:
-            print("Contact's email was added before")
+            return False
 
 
 def show_email_handler():
@@ -305,7 +305,7 @@ def show_email_handler():
     if show_list:
         print(show_list)
     else:
-        print("The are no notes!")
+        return False
 
 
 COMMANDS = {
@@ -341,10 +341,18 @@ def main():
 
         if var in COMMANDS and COMMANDS[var][-1].endswith(']'):
             args = input('Enter arguments: ')
-            COMMANDS[var][0](args)
+            result = COMMANDS[var][0](args)
+            if result:
+                print('Done')
+                continue
+            else:
+                print('Some error')
+
+                
 
         if var in COMMANDS:
             COMMANDS[var][0]()
+            continue
 
         elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
             quit_handler()
