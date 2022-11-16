@@ -104,19 +104,6 @@ def show_contacts_handler():
 
 
 @input_error
-def iteration(var):
-    count = int(var[0])
-    generator = CONTACTS.iterator()
-    for _ in range(count):
-        try:
-            print(next(generator))
-        except StopIteration:
-            print('No more contacts')
-            break
-
-
-
-@input_error
 def find_com(var):
     command_list = []
     for command in COMMANDS.keys():
@@ -128,7 +115,7 @@ def find_com(var):
         command_dict["command"] = command
         command_dict["count"] = count
         command_list.append(command_dict)
-    if command_list == []:
+    if not command_list:
         raise Exception
     command_list = sorted(command_list, key=lambda x: x['count'], reverse=True)
     print(
@@ -174,9 +161,10 @@ def show_notes_handler():
     show_list = []
     for name, record in CONTACTS.items():
         if record.note:
-            show_list.append(f"{name.capitalize()}, note: {record.note}")
+            show_list.append(f"{name.capitalize()}: {record.note}")
     if show_list:
-        print(f"\n{show_list}\n")
+        for item in show_list:
+            print(item)
 
 
 
@@ -200,14 +188,14 @@ def add_tag_handler(var):
 def show_tags_handler():
     show_list = []
     for name, record in CONTACTS.items():
-
-        # TEST
-        print('---',name, record.tag)
-
-
-        if record.tag:
+        if record.tag != {}:
             show_list.append(record.tag)
-            print()
+    if show_list != []:
+        show_list = sorted(show_list, key=lambda x: x['tag'])
+        for i in show_list:
+            print(i)
+    else:
+        raise TypeError
         
         
 
@@ -231,6 +219,8 @@ def change_note_handler(var):
         record = CONTACTS.data[name]
         if record.note:
             record.update_dict(note)
+    else:
+        raise KeyError
 
 
 
@@ -264,16 +254,10 @@ def add_address_handler(var):
     address = " ".join(var.split()[1:])
     if name in CONTACTS:
         record = CONTACTS.data[name]
-        if not record.address:
-            record.add_address(address)
+        record.add_address(address)
 
-@input_error
-def change_address(var):
-    name = var.split()[0]
-    address = " ".join(var.split()[1:])
-    if name in CONTACTS:
-        record = CONTACTS.data[name]
-        record.address
+
+
 
 
 
@@ -282,9 +266,10 @@ def find_address_handler():
     for name, record in CONTACTS.items():
         if record.address:
             show_list.append(
-                f"{name.capitalize()}, address: {record.address.value}")
+                f"{name.capitalize()}'s address: {record.address.value}")
     if show_list:
-        print(show_list)
+        for item in show_list:
+            print(item)
 
 
 
@@ -303,24 +288,55 @@ def add_email_handler(var):
         record = CONTACTS.data[name]
         if not record.email:
             record.add_email(email)
+    else:
+        raise TypeError
 
 
 
 def show_email_handler():
     show_list = []
     for name, record in CONTACTS.items():
-        print(f'Name - {name}\n Email - {record.email}')
         if record.email:
             show_list.append(
-                f"{name.capitalize()}, email: {record.email.value}")
+                f"{name.capitalize()}'s email: {record.email.value}")
+        else:
             continue
     if show_list:
-        print(show_list)
+        for item in show_list:
+            print(item)
 
-@input_error
-def person_tegs():
-    pass
 
+# ---------- TEST ----------
+
+# add_contact_handler('Bog +380963031892')
+# add_contact_handler('Ksy +380963031333')
+# add_contact_handler('Sop +380963031222')
+# add_contact_handler('Lan +380963031222')
+
+# add_birthday_handler('Bog 03.09.2002')
+# add_birthday_handler('Ksy 02.02.2004')
+# add_birthday_handler('Sop 01.01.2001')
+# add_birthday_handler('Lan 09.11.2005')
+
+# add_note_handler('Bog This is test1')
+# add_note_handler('Ksy This is test2')
+# add_note_handler('Sop This is test3')
+# add_note_handler('Lan This is test4')
+
+# add_tag_handler('Bog 1st')
+# add_tag_handler('Ksy 2st')
+# add_tag_handler('Sop 3st')
+# add_tag_handler('Lan 4st')
+
+# add_address_handler('Bog doma')
+# add_address_handler('Ksy S Rostikom')
+# add_address_handler('Sop DaVotTut')
+
+# add_email_handler('Bog test1@gmail.com')
+# add_email_handler('Ksy test2@gmail.com')
+# add_email_handler('Lan test3@gmail.com')
+
+# ---------- TEST ----------
 
 
 COMMANDS = {
@@ -340,11 +356,10 @@ COMMANDS = {
     "all tags": [show_tags_handler, 'show all tags'],
     "all notes": [show_notes_handler, 'show all notes'],
     "all email": [show_email_handler, 'show all emails'],
+    "all address": [find_address_handler, 'show all address'],
     "show all": [show_contacts_handler, 'show all contacts'],
     "days before birthday": [days_to_birthday_handler, '[name]'],
     "to birthday": [show_list_birthday_handler, '[number of days]'],
-    "iter": [iteration, '[number of notes]'],
-    "all address": [find_address_handler, 'show all address'],
     "sort": [clean_folder, 'to sort your folder'],
 }
 
