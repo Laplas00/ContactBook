@@ -161,7 +161,6 @@ def clean_folder():
 def add_note_handler(var):
     name = var.split()[0]
     note = " ".join(var.split()[1:])
-    print('zashel')
     if name in CONTACTS:
         record = CONTACTS.data[name]
         if not record.note:
@@ -177,7 +176,7 @@ def show_notes_handler():
         if record.note:
             show_list.append(f"{name.capitalize()}, note: {record.note}")
     if show_list:
-        print(f"\n ______{show_list}\n______\n")
+        print(f"\n{show_list}\n")
 
 
 
@@ -240,7 +239,6 @@ def find_tag_handler(var):
     tag_for_find = " ".join(var.split()[0:])
     show_list = []
     for name, record in CONTACTS.items():
-        print('shnaga', record.tag)
         if record.tag:
             if re.search(tag_for_find, record.tag["tag"]):
                 show_list.append(f"{name.capitalize()}; {record.tag}")
@@ -303,9 +301,11 @@ def add_email_handler(var):
 def show_email_handler():
     show_list = []
     for name, record in CONTACTS.items():
+        print(f'Name - {name}\n Email - {record.email}')
         if record.email:
             show_list.append(
                 f"{name.capitalize()}, email: {record.email.value}")
+            continue
     if show_list:
         print(show_list)
 
