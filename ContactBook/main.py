@@ -10,12 +10,10 @@ def input_error(handler):
     def wrapper(*args, **kwargs):
         try:
             handler(*args, **kwargs)
-
         except (ValueError, IndexError, UnboundLocalError):
             print("Error. Give me correct name, phone, birthday or email, please")
         except TypeError:
-            return False
-            pass
+            print('Cannot exist')
         except KeyError:
             print("Error. Enter user name, please")
     return wrapper
@@ -163,10 +161,13 @@ def clean_folder():
 def add_note_handler(var):
     name = var.split()[0]
     note = " ".join(var.split()[1:])
+    print('zashel')
     if name in CONTACTS:
         record = CONTACTS.data[name]
         if not record.note:
             record.add_note(note)
+    else:
+        raise KeyError
 
 
 
@@ -176,7 +177,7 @@ def show_notes_handler():
         if record.note:
             show_list.append(f"{name.capitalize()}, note: {record.note}")
     if show_list:
-        print(show_list)
+        print(f"\n ______{show_list}\n______\n")
 
 
 
@@ -188,19 +189,30 @@ def add_tag_handler(var):
         record = CONTACTS.data[name]
         if record.note:
             record.add_tag(tag)
+            return True
+        else:
+            print('rur else')
+            raise TypeError 
+    raise KeyError
+        
 
 
 
 def show_tags_handler():
     show_list = []
     for name, record in CONTACTS.items():
+
+        # TEST
+        print('---',name, record.tag)
+
+
         if record.tag:
             show_list.append(record.tag)
-    if show_list:
-        show_list = sorted(show_list, key=lambda x: x['tag'])
-        print(show_list)
-    else:
-        print("The are no tags!")
+            print()
+        
+        
+
+    
 
 
 @input_error
@@ -225,9 +237,10 @@ def change_note_handler(var):
 
 @input_error
 def find_tag_handler(var):
-    tag_for_find = " ".join(var.split()[2:])
+    tag_for_find = " ".join(var.split()[0:])
     show_list = []
     for name, record in CONTACTS.items():
+        print('shnaga', record.tag)
         if record.tag:
             if re.search(tag_for_find, record.tag["tag"]):
                 show_list.append(f"{name.capitalize()}; {record.tag}")
@@ -296,6 +309,10 @@ def show_email_handler():
     if show_list:
         print(show_list)
 
+@input_error
+def person_tegs():
+    pass
+
 
 
 COMMANDS = {
@@ -332,15 +349,13 @@ def main():
         if var in COMMANDS and COMMANDS[var][-1].endswith(']'):
             args = input('Enter arguments: ')
             COMMANDS[var][0](args)
+            continue
 
         if var in COMMANDS:
-            COMMANDS[var][0]()
-            result = COMMANDS[var][0](args)
+            result = COMMANDS[var][0]()
             if result:
                 print('Done')
                 continue
-            else:
-                print('Some error')
 
                 
 
