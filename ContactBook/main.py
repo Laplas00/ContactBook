@@ -1,6 +1,6 @@
 import re
-from core import *
-from sort import *
+from ContactBook.core import *
+from ContactBook.sort import *
 
 
 CONTACTS = AddressBook()
@@ -266,6 +266,14 @@ def add_address_handler(var):
         record = CONTACTS.data[name]
         if not record.address:
             record.add_address(address)
+
+@input_error
+def change_address(var):
+    name = var.split()[0]
+    address = " ".join(var.split()[1:])
+    if name in CONTACTS:
+        record = CONTACTS.data[name]
+        record.address
 
 
 

@@ -1,1 +1,2 @@
-from .main import main
+from ContactBook.core import *
+from ContactBook.main import *
