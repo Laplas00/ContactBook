@@ -5,9 +5,6 @@ import re
 
 
 class AddressBook(UserDict):
-    current_index = 0
-    N = 2
-
     def __init__(self):
         try:
             with open("save_file.txt", "rb") as file:
@@ -18,20 +15,10 @@ class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
 
-    def iterator(self):
-        show_list = []
-        names = [name for name in self.data]
-        while len(self.data) >= AddressBook.current_index:
-            for name in names[AddressBook.current_index: min(len(self.data), AddressBook.current_index + AddressBook.N)]:
-                if self.data[name].birthday:
-                    show_list.append("{:<10}{:^35}{:>10}".format((self.data[name].name.value).capitalize(
-                    ), " ".join([phone.value for phone in self.data[name].phones]), self.data[name].birthday))
-                else:
-                    show_list.append("{:<10}{:^35}{:>10}".format((self.data[name].name.value).capitalize(
-                    ), " ".join([phone.value for phone in self.data[name].phones]), "-"))
-            yield show_list
-            AddressBook.current_index += AddressBook.N
-            show_list = []
+
+
+
+
 
     def save_contacts(self):
         if self.data:
@@ -94,7 +81,7 @@ class Record:
                 print(
                     f"to birthday {(((birthday).replace(year=(datetime.now()).year + 1)) - datetime.now()).days} days")
         else:
-            print("Contact's birthday wasn't added")
+            return TypeError
 
     def interval_birthday(self, interval):
         if self.birthday:
@@ -105,10 +92,11 @@ class Record:
             else:
                 diference = (
                     ((birthday).replace(year=(datetime.now()).year + 1)) - datetime.now()).days
-            if diference < interval:
+            if diference == interval:
                 print(f"{(self.name.value).capitalize()}, birthday: {self.birthday}")
+            
         else:
-            print("No birthday in this interval")
+            raise TypeError
 
 
 class Field:
@@ -169,6 +157,7 @@ class Note(Field):
 
 
 class Address(Field):
+    
     pass
     # def __init__(self, value):
     #     super().__init__()
