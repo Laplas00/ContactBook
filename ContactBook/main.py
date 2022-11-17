@@ -13,7 +13,7 @@ def input_error(handler):
         except (ValueError, IndexError, UnboundLocalError):
             print("Error. Give me correct name, phone, birthday or email, please")
         except TypeError:
-            print('Cannot exist')
+            print('Nothing found')
         except KeyError:
             print("Error. Enter user name, please")
     return wrapper
@@ -281,6 +281,7 @@ def show_list_birthday_handler(var):
     interval = int(var.split()[0])
     for record in CONTACTS.values():
         record.interval_birthday(interval)
+        return True
 
 
 @input_error
