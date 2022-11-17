@@ -20,7 +20,7 @@ def input_error(handler):
 
 
 def hello_handler():
-    print("Hello user i have this commands\n")
+    print("Hello from PySharks user :)\nI have this commands\n")
     for com in COMMANDS:
         print('{:<23} - {:>27}'.format(com, COMMANDS[com][-1]))
     print('\n')
@@ -137,10 +137,6 @@ def find(var):
         raise Exception
     print(
         f"You are looking for '{var}', the most suitable contact is: {show_list}")
-
-
-def clean_folder():
-    get_main_path()
 
 
 
