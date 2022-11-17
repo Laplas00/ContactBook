@@ -157,6 +157,7 @@ def add_note_handler(var):
 
 
 
+@input_error
 def show_notes_handler():
     show_list = []
     for name, record in CONTACTS.items():
@@ -165,6 +166,8 @@ def show_notes_handler():
     if show_list:
         for item in show_list:
             print(item)
+    else:
+        raise TypeError
 
 
 
@@ -184,7 +187,7 @@ def add_tag_handler(var):
         
 
 
-
+@input_error
 def show_tags_handler():
     show_list = []
     for name, record in CONTACTS.items():
@@ -308,33 +311,33 @@ def show_email_handler():
 
 # ---------- TEST ----------
 
-# add_contact_handler('Bog +380963031892')
-# add_contact_handler('Ksy +380963031333')
-# add_contact_handler('Sop +380963031222')
-# add_contact_handler('Lan +380963031222')
+add_contact_handler('Bog +380963031892')
+add_contact_handler('Ksy +380963031333')
+add_contact_handler('Sop +380963031222')
+add_contact_handler('Lan +380963031222')
 
-# add_birthday_handler('Bog 03.09.2002')
-# add_birthday_handler('Ksy 02.02.2004')
-# add_birthday_handler('Sop 01.01.2001')
-# add_birthday_handler('Lan 09.11.2005')
+add_birthday_handler('Bog 03.09.2002')
+add_birthday_handler('Ksy 02.02.2004')
+add_birthday_handler('Sop 01.01.2001')
+add_birthday_handler('Lan 09.11.2005')
 
-# add_note_handler('Bog This is test1')
-# add_note_handler('Ksy This is test2')
-# add_note_handler('Sop This is test3')
-# add_note_handler('Lan This is test4')
+add_note_handler('Bog This is test1')
+add_note_handler('Ksy This is test2')
+add_note_handler('Sop This is test3')
+add_note_handler('Lan This is test4')
 
-# add_tag_handler('Bog 1st')
-# add_tag_handler('Ksy 2st')
-# add_tag_handler('Sop 3st')
-# add_tag_handler('Lan 4st')
+add_tag_handler('Bog 1st')
+add_tag_handler('Ksy 2st')
+add_tag_handler('Sop 3st')
+add_tag_handler('Lan 4st')
 
-# add_address_handler('Bog doma')
-# add_address_handler('Ksy S Rostikom')
-# add_address_handler('Sop DaVotTut')
+add_address_handler('Bog doma')
+add_address_handler('Ksy S Rostikom')
+add_address_handler('Sop DaVotTut')
 
-# add_email_handler('Bog test1@gmail.com')
-# add_email_handler('Ksy test2@gmail.com')
-# add_email_handler('Lan test3@gmail.com')
+add_email_handler('Bog test1@gmail.com')
+add_email_handler('Ksy test2@gmail.com')
+add_email_handler('Lan test3@gmail.com')
 
 # ---------- TEST ----------
 
@@ -360,7 +363,8 @@ COMMANDS = {
     "show all": [show_contacts_handler, 'show all contacts'],
     "days before birthday": [days_to_birthday_handler, '[name]'],
     "to birthday": [show_list_birthday_handler, '[number of days]'],
-    "sort": [clean_folder, 'to sort your folder'],
+    "sort": [run, 'Sort folder [path]'],
+    "exit" : [quit_handler, 'Quit']
 }
 
 
@@ -380,10 +384,6 @@ def main():
                 print('Done')
                 continue
 
-                
-
-        elif var in ('quit', 'exit', 'q', 'break', 'bye', 'good bye'):
-            quit_handler()
         else:
             try:
                 find(var)
@@ -398,6 +398,8 @@ def main():
             except:
                 print("Nothing found in notes!")
             continue
+
+        
 
 
 if __name__ == "__main__":

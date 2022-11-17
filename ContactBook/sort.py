@@ -1,145 +1,152 @@
-import sys
+from pathlib import Path
+import re
 import os
 import shutil
 
 
-def get_main_path():
+TRANS = {ord('а'): 'a', ord("б"): 'b', ord('в'): 'v', ord('г'): 'g', ord('д'): 'd', ord('е'): "e", ord('ё'): "e", ord('ж'): "j", ord('з'): "z", ord('и'): "i", ord('й'): "y", ord('к'): "k", ord('л'): "l", ord('м'): "m", ord('н'): "n", ord('о'): "o", ord('п'): "p", ord('р'): "r", ord('с'): "c", ord('т'): "t", ord('у'): "u",
+         ord('ф'): "f", ord('х'): "x", ord('ц'): "ts", ord('ч'): "ch", ord('ш'): "sh", ord('щ'): "sch", ord('ъ'): "", ord('ы'): "y", ord('ь'): "", ord('э'): "e", ord('ю'): "yu", ord('я'): "ya", ord('є'): "ye", ord('і'): "i", ord('ї'): "yi", ord('ґ'): "g"}
+
+folders = {'images': ['png', 'jpg', 'jpeg', 'svg'],
+           'video': ['mp4', 'mov', 'mkv', 'avi'],
+           'documents': ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx', 'rtf'],
+           'audio': ['mp3', 'ogg', 'wav', 'amr'],
+           'archives': ['zip', 'gz', 'tar', 'dmg']
+           }
+
+
+def normalize(string, copy=False):
+    num = 0
+    if copy:
+        string = string+str(num)
+        num+=1
+        return string
+
+    result = ''
+
+    name = string.split('.')
+    ext = name.pop(-1).lower()
+    name = '_'.join(name)
+    name = name.lower()
+    name = name.translate(TRANS)
+
+    some = re.findall(r'[a-zA-Z0-9]', name)
+
+    for i in name:
+        if i not in some:
+            result += '_'
+            continue
+        else:
+            result += i
+
+    result = result + '.' + ext
+    namedir = os.path.dirname(string)
+    new_filepath = os.path.join(namedir, result)
+
+    if str(string) == str(new_filepath):
+        return string
+        
+    else:
+        return result
+
+def make_a_copy(filepath):
+    num = 6
+    file_name = os.path.basename(filepath)
+    file, ext = file_name.split('.')[0],file_name.split('.')[-1]
+    file += str(num)
+    num+=1
     
-    main_path = ""
-    args = sys.argv
-    if len(args) == 1:
-        main_path = input("Enter the folder path: ")
-    else:
-        main_path = args[1]
-    while True:
-        if not os.path.exists(main_path):
-            if main_path:
-                print(f"{main_path} не існує")
-            main_path = input("Enter the folder path: ")
-        else:
-            if os.path.isdir(main_path):
-                break
+    result = os.path.dirname(filepath) +'/'+ file + '.' + ext
+    return result
+    
+
+    
+
+
+def move_to_folder(filepath):
+    file_p = Path(filepath)
+    file = file_p.name
+    ext = file.split('.')[-1]
+        
+    for key in folders:
+        if ext in folders[key]:
+            need_path = os.path.join(DIRECTORY, key)
+
+            if key in os.listdir(DIRECTORY):
+                try:    
+                    shutil.move(filepath, need_path)
+
+                except shutil.Error:
+                    copy = make_a_copy(file_p)
+                    os.rename(file, copy)
+                    shutil.move(copy, need_path)
+
+                except FileNotFoundError:
+                    pass
+
+                return True
+
             else:
-                print(f"{main_path} is not a folder")
-                main_path = ""
+                os.mkdir(need_path)
+                try:
+                    shutil.move(file_p, need_path)
 
-    return around_dir(main_path)
+                except FileNotFoundError:
+                    print('Loading..')
+                
+                except shutil.Error:
+                    print('Loading...')
+                return True
 
+    if 'other' in os.listdir(DIRECTORY):
+        shutil.move(file, str(os.path.join(DIRECTORY,'other')))
 
-video_folder = ["avi", "mp4", "mov", "mkv", "gif"]
-audio_folder = ["mp3", "ogg", "wav", "amr", "m4a", "wma"]
-images_folder = ["jpeg", "png", "jpg", "svg"]
-doc_folder = ["doc", "docx", "txt", "pdf",
-              "xlsx", "pptx", "html", "scss", "css", "map"]
-arch_folder = ["zip", "gz", "tar", "rar"]
-
-
-def normalize(file):
-
-    map = {"а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh", "з": "z", "и": "i", "й": "y",
-           "к": "k", "л": "l", "м": "m", "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u", "ф": "f", "х": "h",
-           "ц": "ts", "ч": "ch", "ш": "sh", "щ": "sch", "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu", "я": "ya", "і": "i", "є": "e", "ї": "i", "А": "A",
-           "Б": "B", "В": "V", "Г": "G", "Д": "D", "Е": "E", "Ё": "E", "Ж": "h", "З": "Z", "И": "I", "Й": "Y", "К": "K", "Л": "L",
-           "М": "M", "Н": "N", "О": "O", "П": "P", "Р": "R", "С": "S", "Т": "T", "У": "U", "Ф": "F", "Х": "H", "Ц": "Ts", "Ч": "Ch",
-           "Ш": "Sh", "Щ": "Sch", "Ъ": "", "Ы": "Y", "Ь": "", "Э": "E", "Ю": "Yu", "Я": "Ya", "І": "I", "Є": "E",  "Ї": "I"}
-    lists = file.split(".")
-    name_file = ".".join(lists[0:-1])
-    new_name = ""
-    for el in name_file:
-        if el in map:
-            new_name += map[el]
-        elif (ord("A") <= ord(el) <= ord("Z")) or (ord("a") <= ord(el) <= ord("z")) or el.isdigit():
-            new_name += el
-        else:
-            new_name += "_"
-
-    return new_name + "." + lists[-1]
-
-
-def path_handler(file, file_path, main_path):
-
-    video_path = os.path.join(main_path, "video")
-    if not os.path.exists(video_path):
-        os.makedirs(video_path)
-
-    audio_path = os.path.join(main_path, "audio")
-    if not os.path.exists(audio_path):
-        os.makedirs(audio_path)
-
-    images_path = os.path.join(main_path, "images")
-    if not os.path.exists(images_path):
-        os.makedirs(images_path)
-
-    documents_path = os.path.join(main_path, "documents")
-    if not os.path.exists(documents_path):
-        os.makedirs(documents_path)
-
-    archives_path = os.path.join(main_path, "archives")
-    if not os.path.exists(archives_path):
-        os.makedirs(archives_path)
-
-    other_path = os.path.join(main_path, "other")
-    if not os.path.exists(other_path):
-        os.makedirs(other_path)
-
-    return file_handler(file, file_path, main_path, video_path, audio_path, images_path, documents_path, archives_path, other_path)
-
-
-def file_handler(file, file_path, main_path, video_path, audio_path, images_path, documents_path, archives_path, other_path):
-
-    file_name_divide = normalize(file).split(".")
-    file_ending = ""
-    if len(file_name_divide) > 1:
-        file_ending = file_name_divide[-1]
-    if not file_ending.lower():
-        return None
     else:
-        if file_ending in video_folder:
-            new_path = os.path.join(video_path, file)
-            os.replace(shutil.move(file_path, new_path),
-                       os.path.join(video_path, normalize(file)))
-        elif file_ending in audio_folder:
-            new_path = os.path.join(audio_path, file)
-            os.replace(shutil.move(file_path, new_path),
-                       os.path.join(audio_path, normalize(file)))
-        elif file_ending in images_folder:
-            new_path = os.path.join(images_path, file)
-            os.replace(shutil.move(file_path, new_path),
-                       os.path.join(images_path, normalize(file)))
-        elif file_ending in doc_folder:
-            new_path = os.path.join(documents_path, file)
-            os.replace(shutil.move(file_path, new_path),
-                       os.path.join(documents_path, normalize(file)))
-        elif file_ending in arch_folder:
-            new_path = os.path.join(archives_path, file)
-            try:
-                shutil.unpack_archive(shutil.move(file_path, new_path), os.path.join(
-                    archives_path, normalize(file).rstrip(file_ending)))
-            except shutil.ReadError:
-                print(
-                    f"Unknown format, archive {normalize(file)}, cannot unpack. Import an additional library.")
-            finally:
-                os.rename(os.path.join(archives_path, file),
-                          os.path.join(archives_path, normalize(file)), )
-        else:
-            new_path = os.path.join(other_path, file)
-            os.replace(shutil.move(file_path, new_path),
-                       os.path.join(other_path, normalize(file)))
+        os.mkdir(os.path.join(DIRECTORY,'other'))
+        shutil.move(file, os.path.join(DIRECTORY,'other'))
+        
 
 
-def around_dir(main_path):
+def sort(path):
+    os.chdir(path)
+    path = Path(path)
 
-    files = os.listdir(main_path)
-    for file in files:
-        file_path = os.path.join(main_path, file)
-        if os.path.isfile(file_path):
-            path_handler(file, file_path, main_path)
-        else:
-            around_dir(file_path)
-            if not os.listdir(file_path):
-                os.rmdir(file_path)
+    for file in path.iterdir():
+        if file.is_dir():
+            if file.name in folders.keys():
+                # file in folders.keys
+                continue
+                
+            elif file.name == 'other':
+                # other
                 continue
 
+            elif len(os.listdir(file)) == 0:
+                # deliting empty dir
+                os.rmdir(file)
+                continue
 
-if __name__ == "__main__":
-    get_main_path()
+            sort(file)
+
+        elif file.exists() != True:
+            break
+
+        elif file.is_file():
+            if str(file.name).startswith('.DS'):
+                os.remove(file)
+                continue
+
+            res = normalize(file.name)
+            os.rename(file, res)
+            res = os.path.join(os.path.dirname(file), res)
+            move_to_folder(res)
+
+        else:
+            break
+DIRECTORY = ''
+
+def run(path):
+    global DIRECTORY
+    DIRECTORY = path
+    for _ in range(10):
+        sort(path)
