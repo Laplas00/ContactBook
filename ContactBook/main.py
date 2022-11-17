@@ -311,33 +311,33 @@ def show_email_handler():
 
 # ---------- TEST ----------
 
-add_contact_handler('Bog +380963031892')
-add_contact_handler('Ksy +380963031333')
-add_contact_handler('Sop +380963031222')
-add_contact_handler('Lan +380963031222')
+# add_contact_handler('Bog +380963031892')
+# add_contact_handler('Ksy +380963031333')
+# add_contact_handler('Sop +380963031222')
+# add_contact_handler('Lan +380963031222')
 
-add_birthday_handler('Bog 03.09.2002')
-add_birthday_handler('Ksy 02.02.2004')
-add_birthday_handler('Sop 01.01.2001')
-add_birthday_handler('Lan 09.11.2005')
+# add_birthday_handler('Bog 03.09.2002')
+# add_birthday_handler('Ksy 02.02.2004')
+# add_birthday_handler('Sop 01.01.2001')
+# add_birthday_handler('Lan 09.11.2005')
 
-add_note_handler('Bog This is test1')
-add_note_handler('Ksy This is test2')
-add_note_handler('Sop This is test3')
-add_note_handler('Lan This is test4')
+# add_note_handler('Bog This is test1')
+# add_note_handler('Ksy This is test2')
+# add_note_handler('Sop This is test3')
+# add_note_handler('Lan This is test4')
 
-add_tag_handler('Bog 1st')
-add_tag_handler('Ksy 2st')
-add_tag_handler('Sop 3st')
-add_tag_handler('Lan 4st')
+# add_tag_handler('Bog 1st')
+# add_tag_handler('Ksy 2st')
+# add_tag_handler('Sop 3st')
+# add_tag_handler('Lan 4st')
 
-add_address_handler('Bog doma')
-add_address_handler('Ksy S Rostikom')
-add_address_handler('Sop DaVotTut')
+# add_address_handler('Bog doma')
+# add_address_handler('Ksy S Rostikom')
+# add_address_handler('Sop DaVotTut')
 
-add_email_handler('Bog test1@gmail.com')
-add_email_handler('Ksy test2@gmail.com')
-add_email_handler('Lan test3@gmail.com')
+# add_email_handler('Bog test1@gmail.com')
+# add_email_handler('Ksy test2@gmail.com')
+# add_email_handler('Lan test3@gmail.com')
 
 # ---------- TEST ----------
 
